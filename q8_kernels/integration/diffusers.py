@@ -146,29 +146,29 @@ def create_attn_processor():
             if encoder_hidden_states is not None:
                 is_self_attention = False
 
-                query = attn.to_q(hidden_states, None, True)
+                query = attn.to_q(hidden_states, None)
                 query = attn.q_norm(query)
 
-                key = attn.to_k(encoder_hidden_states, None, True)
+                key = attn.to_k(encoder_hidden_states, None)
                 key = attn.k_norm(key)
-                value = attn.to_v(encoder_hidden_states, None, True)
+                value = attn.to_v(encoder_hidden_states, None)
             else:  # if no context provided do self-attention
                 is_self_attention = True
 
                 query = attn.to_q(
-                    hidden_states, hidden_states_scales, False, torch.bfloat16
+                    hidden_states, hidden_states_scales, torch.bfloat16
                 )
                 query = rms_norm_rope(
                     query, freqs_cis[0], freqs_cis[1], attn.q_norm.weight
                 )
 
                 key = attn.to_k(
-                    hidden_states, hidden_states_scales, False, torch.bfloat16
+                    hidden_states, hidden_states_scales, torch.bfloat16
                 )
                 key = rms_norm_rope(key, freqs_cis[0], freqs_cis[1], attn.k_norm.weight)
 
                 value = attn.to_v(
-                    hidden_states, hidden_states_scales, False, torch.bfloat16
+                    hidden_states, hidden_states_scales, torch.bfloat16
                 )
 
             value_for_stg = value
@@ -281,7 +281,7 @@ def create_attn_processor():
                 hidden_states = hidden_states_a
 
             # linear proj
-            hidden_states = attn.to_out[0](hidden_states, None, True)
+            hidden_states = attn.to_out[0](hidden_states, None)
             # dropout
             hidden_states = attn.to_out[1](hidden_states)
 
@@ -450,7 +450,7 @@ def create_forwards():
 
     def gelu_forward(self, hidden_states, hidden_states_scales):
         hidden_states = self.proj(
-            hidden_states, hidden_states_scales, False, torch.bfloat16
+            hidden_states, hidden_states_scales, torch.bfloat16
         )
         hidden_states, hidden_states_scales = gelu_hadamard_transform(
             hidden_states, out_dtype=compute_dtype
@@ -467,7 +467,7 @@ def create_forwards():
             hidden_states, hidden_states_scales
         )
         hidden_states = self.net[2](
-            hidden_states, hidden_states_scales, False, out_dtype=torch.bfloat16
+            hidden_states, hidden_states_scales, out_dtype=torch.bfloat16
         )
         return hidden_states
 
