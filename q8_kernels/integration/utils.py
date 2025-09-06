@@ -4,17 +4,7 @@ from ..modules.linear import FP8Linear, Q8Linear
 
 
 def get_device_arch():
-    major, minor = torch.cuda.get_device_capability(0)
-    if major == 8 and (minor >= 0 and minor < 9):
-        return "ampere"
-    if major == 8 and minor == 9:
-        return "ada"
-    if major == 9 and minor == 0:
-        return "hopper"
-    if major == 12:
-        return "blackwell"
-    raise NotImplementedError("Not supported gpu!")
-
+    return hopper
 
 def is_fa3_available():
     try:
