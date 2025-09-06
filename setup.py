@@ -31,16 +31,7 @@ def get_cuda_bare_metal_version(cuda_dir):
     return raw_output, bare_metal_version
 
 def get_device_arch():
-    major, minor = torch.cuda.get_device_capability(0)
-    if major == 8 and (minor >= 0 and minor < 9):
-        return "ampere"
-    if major == 8 and minor == 9:
-        return "ada"
-    if major == 9 and minor == 0:
-        return "hopper"
-    if major == 12:
-        return "blackwell"
-    raise NotImplementedError("Not supported gpu!")
+    return "hopper"
     
 this_dir = Path(__file__).parent
 device_arch = get_device_arch()
