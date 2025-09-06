@@ -4,7 +4,7 @@ from ..modules.linear import FP8Linear, Q8Linear
 
 
 def get_device_arch():
-    return hopper
+    return "hopper"
 
 def is_fa3_available():
     try:
